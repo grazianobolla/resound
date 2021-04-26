@@ -24,7 +24,7 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-environment/default_clear_color=Color( 0.729412, 0.780392, 0.811765, 1 )
+environment/default_clear_color=Color( 0.603, 0.644317, 0.67, 1 )
 quality/filters/msaa=2
 quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"

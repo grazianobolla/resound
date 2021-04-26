@@ -12,13 +12,19 @@ public class GameLogic : Node
     [Export] NodePath controlGUIPath;
     [Export] NodePath audioPlayerPath;
 
-    //logic
     List<Card> cardArray = new List<Card>();
-
-    uint pointCounter = 0;
     Card lastSelectedCard = null;
     int cardCount = 0;
-    uint cards = 0;
+    uint pointCounter = 0, cards = 0;
+
+    AudioStreamPlayer audioPlayer;
+
+    public override void _Ready()
+    {
+        audioPlayer = GetNode(audioPlayerPath) as AudioStreamPlayer;
+
+        CreateGame(6);
+    }
 
     public void CreateGame(uint cardAmount)
     {
@@ -31,14 +37,12 @@ public class GameLogic : Node
             GD.Print("Changed card amount for: " + cardAmount);
         }
 
-        AudioServer.SetBusSolo(2, false);
+        AudioServer.SetBusSolo(2, false); //restores buses
 
+        //cleans up things and starts a game
         RestartGame();
-
         GenerateCards(cardAmount);
-
         Vector2 deckDimensions = DistributeCards(cardAmount);
-
         ResizeDeck(deckDimensions);
     }
 
@@ -174,10 +178,9 @@ public class GameLogic : Node
 
     void WinGame()
     {
-        AudioStreamPlayer audioPlayer = GetNode(audioPlayerPath) as AudioStreamPlayer;
         AudioStream winSoundStream = ResourceLoader.Load("Sounds/Win.wav") as AudioStream;
 
-        AudioServer.SetBusSolo(2, true);
+        AudioServer.SetBusSolo(2, true); //mutes all buses except for this one so you can enjoy the win sound effect
 
         audioPlayer.Stream = winSoundStream;
         audioPlayer.Play();
@@ -188,6 +191,9 @@ public class GameLogic : Node
         Control controlGUI = GetNode(controlGUIPath) as Control;
         controlGUI.Show();
 
-        CreateGame(6);
+        AudioServer.SetBusMute(1, false);
+        audioPlayer.VolumeDb = -15;
+
+        CreateGame(6); //set easy game as preview default
     }
 }

@@ -3,19 +3,16 @@ using System;
 
 public class MenuController : Node
 {
-    [Export] NodePath customGameLabelPath;
     [Export] NodePath ControlPath;
     [Export] NodePath menuSoundPlayerPath;
 
     AudioStreamPlayer menuStreamPlayer;
     Control menuControl;
-    Label customGameLabel;
 
     GameLogic gameLogic;
 
     public override void _Ready()
     {
-        customGameLabel = GetNode(customGameLabelPath) as Label;
         gameLogic = GetNode("/root/GameScene/GameLogic") as GameLogic;
         menuControl = GetNode(ControlPath) as Control;
         menuStreamPlayer = GetNode(menuSoundPlayerPath) as AudioStreamPlayer;
@@ -23,9 +20,7 @@ public class MenuController : Node
 
     void _onSliderChange(float value)
     {
-        float val = value;
-        customGameLabel.Text = val.ToString();
-        gameLogic.CreateGame((uint)val);
+        gameLogic.CreateGame((uint)value);
     }
 
     //easy
@@ -51,9 +46,25 @@ public class MenuController : Node
         Random random = new Random();
         int id = (random.Next() % 6) + 1;
 
+        AudioServer.SetBusMute(1, true);
+
         menuStreamPlayer.Stream = ResourceLoader.Load($"Sounds/Menu/StartGame{id}.wav") as AudioStream;
         menuStreamPlayer.Play();
 
         menuControl.Hide();
+    }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey key_event)
+        {
+            if (key_event.Pressed && key_event.Scancode == (int)KeyList.F11)
+            {
+                if (OS.WindowFullscreen == true) OS.WindowFullscreen = false;
+                else OS.WindowFullscreen = true;
+            }
+
+            return;
+        }
     }
 }

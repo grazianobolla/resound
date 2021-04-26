@@ -62,6 +62,8 @@ public class Card : Spatial
 
         //set fleeting coordinates
         isFleeting = true;
+
+        //sets a random angle for the fleeting card
         RandomNumberGenerator rand = new RandomNumberGenerator();
         rand.Randomize();
         fleetAngle = rand.RandfRange(0, Mathf.Pi * 2);
@@ -108,10 +110,9 @@ public class Card : Spatial
         if (evnt is InputEventMouseButton input_mouse_button && input_mouse_button.Pressed == true && input_mouse_button.ButtonIndex == (int)ButtonList.Left)
         {
             GD.Print("CardID: " + soundID);
-            if (isSelected == false)
+            if (isSelected == false && gameLogic.CheckCard())
             {
-                if (gameLogic.CheckCard())
-                    RevealCard();
+                RevealCard();
             }
         }
     }
