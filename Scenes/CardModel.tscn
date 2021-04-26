@@ -1,6 +1,6 @@
 [gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://Card.cs" type="Script" id=1]
+[ext_resource path="res://Scripts/Card.cs" type="Script" id=1]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 1.5, 0.25, 2.1 )
