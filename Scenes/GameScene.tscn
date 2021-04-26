@@ -23,9 +23,9 @@ thickness = 10
 [sub_resource type="StyleBoxFlat" id=4]
 bg_color = Color( 0.694118, 0.694118, 0.694118, 1 )
 
-[sub_resource type="StyleBoxFlat" id=6]
+[sub_resource type="StyleBoxFlat" id=5]
 
-[sub_resource type="DynamicFont" id=7]
+[sub_resource type="DynamicFont" id=6]
 size = 32
 use_filter = true
 font_data = ExtResource( 5 )
@@ -34,7 +34,7 @@ font_data = ExtResource( 5 )
 
 [node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 8 )
-volume_db = -15.0
+volume_db = -50.0
 autoplay = true
 bus = "Music"
 script = ExtResource( 9 )
@@ -159,7 +159,7 @@ custom_icons/grabber_highlight = ExtResource( 4 )
 custom_icons/grabber = ExtResource( 4 )
 custom_styles/slider = SubResource( 3 )
 custom_styles/grabber_area_highlight = SubResource( 4 )
-custom_styles/grabber_area = SubResource( 6 )
+custom_styles/grabber_area = SubResource( 5 )
 min_value = 2.0
 max_value = 56.0
 step = 2.0
@@ -173,16 +173,16 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -83.5
+margin_left = -142.5
 margin_top = 7.0
-margin_right = 83.5
-margin_bottom = 47.0
+margin_right = 138.5
+margin_bottom = 58.0
 focus_mode = 0
-custom_fonts/font = SubResource( 7 )
+custom_fonts/font = SubResource( 6 )
 custom_colors/font_color = Color( 1, 1, 1, 1 )
 custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
 enabled_focus_mode = 0
-text = "PLAY"
+text = "PLAY CUSTOM"
 flat = true
 __meta__ = {
 "_edit_use_anchors_": false

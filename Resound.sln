@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resound v2", "Resound v2.csproj", "{1DE242C6-0363-4C4B-9463-12899F959B34}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resound", "Resound.csproj", "{1DE242C6-0363-4C4B-9463-12899F959B34}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

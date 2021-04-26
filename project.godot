@@ -10,8 +10,12 @@ config_version=4
 
 [application]
 
-config/name="Resound v2"
+config/name="Resound"
 run/main_scene="res://Scenes/GameScene.tscn"
+boot_splash/image="res://icon.png"
+boot_splash/fullsize=false
+boot_splash/use_filter=false
+boot_splash/bg_color=Color( 0.729412, 0.776471, 0.811765, 1 )
 config/icon="res://icon.png"
 
 [audio]
@@ -24,7 +28,7 @@ common/enable_pause_aware_picking=true
 
 [rendering]
 
-environment/default_clear_color=Color( 0.603, 0.644317, 0.67, 1 )
+environment/default_clear_color=Color( 0.729412, 0.776471, 0.811765, 1 )
 quality/filters/msaa=2
 quality/filters/use_fxaa=true
 environment/default_environment="res://default_env.tres"

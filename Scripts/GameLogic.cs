@@ -11,6 +11,7 @@ public class GameLogic : Node
     [Export] NodePath deckNodePath;
     [Export] NodePath controlGUIPath;
     [Export] NodePath audioPlayerPath;
+    AudioStreamPlayer musicPlayer;
 
     List<Card> cardArray = new List<Card>();
     Card lastSelectedCard = null;
@@ -22,7 +23,7 @@ public class GameLogic : Node
     public override void _Ready()
     {
         audioPlayer = GetNode(audioPlayerPath) as AudioStreamPlayer;
-
+        musicPlayer = GetNode("/root/GameScene/MusicPlayer") as AudioStreamPlayer;
         CreateGame(6);
     }
 
@@ -186,14 +187,20 @@ public class GameLogic : Node
         audioPlayer.Play();
     }
 
-    void _onVictoryAudioPlayerFinish()
+    public void ReturnToMenu()
     {
         Control controlGUI = GetNode(controlGUIPath) as Control;
         controlGUI.Show();
 
         AudioServer.SetBusMute(1, false);
-        audioPlayer.VolumeDb = -15;
+
+        musicPlayer.VolumeDb = -50; //lower music volume
 
         CreateGame(6); //set easy game as preview default
+    }
+
+    void _onVictoryAudioPlayerFinish()
+    {
+        ReturnToMenu();
     }
 }

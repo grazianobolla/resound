@@ -58,10 +58,17 @@ public class MenuController : Node
     {
         if (@event is InputEventKey key_event)
         {
-            if (key_event.Pressed && key_event.Scancode == (int)KeyList.F11)
+            if (key_event.Pressed)
             {
-                if (OS.WindowFullscreen == true) OS.WindowFullscreen = false;
-                else OS.WindowFullscreen = true;
+                if (key_event.Scancode == (int)KeyList.F11)
+                {
+                    if (OS.WindowFullscreen == true) OS.WindowFullscreen = false;
+                    else OS.WindowFullscreen = true;
+                }
+                else if (key_event.Scancode == (int)KeyList.Escape)
+                {
+                    gameLogic.ReturnToMenu();
+                }
             }
 
             return;
