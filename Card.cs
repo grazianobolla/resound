@@ -14,12 +14,24 @@ public class Card : Spatial
     //logic
     GameLogic gameLogic;
     bool isSelected = false;
+    bool isFleeting = false;
+
+    float fleetAngle;
+    [Export] float fleetingSpeed = 16.0f;
 
     public override void _Ready()
     {
         audioPlayer = GetNode("Audio") as AudioStreamPlayer;
         animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer;
         gameLogic = GetNode("/root/GameScene/GameLogic") as GameLogic;
+    }
+
+    public override void _Process(float delta)
+    {
+        if (isFleeting == true)
+        {
+            Translate(new Vector3(Mathf.Cos(fleetAngle), 0, Mathf.Sin(fleetAngle)) * delta * fleetingSpeed);
+        }
     }
 
     public void SetSound(uint id)
@@ -46,6 +58,13 @@ public class Card : Spatial
         animationPlayer.Play("Fleet");
         isSelected = true;
 
+        //set fleeting coordinates
+        isFleeting = true;
+        RandomNumberGenerator rand = new RandomNumberGenerator();
+        rand.Randomize();
+        fleetAngle = rand.RandfRange(0, Mathf.Pi * 2);
+
+        GD.Print("Fleeting with angle: " + fleetAngle);
     }
 
     void _onAnimationFinished(string animation)
@@ -56,8 +75,10 @@ public class Card : Spatial
             case "Reveal":
                 audioPlayer.Stream = cardSound;
                 audioPlayer.Play();
+                gameLogic.ProcessCard(this);
                 break;
             case "Fleet":
+                isFleeting = false;
                 Visible = false;
                 gameLogic.ResetCardCounter();
                 break;
@@ -67,11 +88,6 @@ public class Card : Spatial
             default:
                 break;
         }
-    }
-
-    void _onAudioFinished()
-    {
-        gameLogic.ProcessCard(this);
     }
 
     void _onAreaInputEvent(Node camera, InputEvent evnt, Vector3 click_position, Vector3 click_normal, int shape_index)
