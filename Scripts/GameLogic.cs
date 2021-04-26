@@ -51,6 +51,7 @@ public class GameLogic : Node
     {
         //clear current game
         pointCounter = 0;
+        ResetCardCounter();
 
         foreach (Node cardModel in cardArray)
         {
