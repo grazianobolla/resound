@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/CardRevealWin20.wav-9c2912e84cec676687dbbf02d4b13f9c.sample"
+
+[deps]
+
+source_file="res://Sounds/CardRevealWin/CardRevealWin20.wav"
+dest_files=[ "res://.import/CardRevealWin20.wav-9c2912e84cec676687dbbf02d4b13f9c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

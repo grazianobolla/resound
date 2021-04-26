@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/StartGame6.wav-2b0c58453d304579414cd68220fd1248.sample"
+
+[deps]
+
+source_file="res://Sounds/Menu/StartGame6.wav"
+dest_files=[ "res://.import/StartGame6.wav-2b0c58453d304579414cd68220fd1248.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -6,7 +6,7 @@ public class Card : Spatial
     //audio
     public int soundID = -1;
     AudioStreamPlayer audioPlayer;
-    AudioStream cardSound;
+    AudioStream cardSound, matchCardSound;
 
     //animations
     AnimationPlayer animationPlayer;
@@ -21,7 +21,6 @@ public class Card : Spatial
 
     public override void _Ready()
     {
-        audioPlayer = GetNode("Audio") as AudioStreamPlayer;
         animationPlayer = GetNode("AnimationPlayer") as AnimationPlayer;
         gameLogic = GetNode("/root/GameScene/GameLogic") as GameLogic;
     }
@@ -36,8 +35,11 @@ public class Card : Spatial
 
     public void SetSound(uint id)
     {
-        soundID = (int)id;
-        cardSound = ResourceLoader.Load($"Sounds/Cards/CardReveal{id}.wav") as AudioStream;
+        soundID = (int)id + 1; //TODO: rename sounds start from 0
+        cardSound = ResourceLoader.Load($"Sounds/CardReveal/CardReveal{soundID}.wav") as AudioStream;
+        matchCardSound = ResourceLoader.Load($"Sounds/CardRevealWin/CardRevealWin{soundID}.wav") as AudioStream;
+        audioPlayer = GetNode("Audio") as AudioStreamPlayer;
+        audioPlayer.Stream = cardSound;
     }
 
     public void HideCard()
@@ -67,6 +69,12 @@ public class Card : Spatial
         GD.Print("Fleeting with angle: " + fleetAngle);
     }
 
+    public void PlayMatchSound()
+    {
+        audioPlayer.Stream = matchCardSound;
+        audioPlayer.Play();
+    }
+
     void _onAnimationFinished(string animation)
     {
         //when the reveal animation finishes, we call the Check() function, this is only for aesthetic
@@ -75,8 +83,11 @@ public class Card : Spatial
             case "Reveal":
                 animationPlayer.Play("Hover");
 
-                audioPlayer.Stream = cardSound;
-                audioPlayer.Play();
+                if (audioPlayer.Stream != matchCardSound)
+                {
+                    audioPlayer.Stream = cardSound;
+                    audioPlayer.Play();
+                }
 
                 gameLogic.ProcessCard(this);
                 break;

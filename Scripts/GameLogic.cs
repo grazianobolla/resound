@@ -7,9 +7,10 @@ public class GameLogic : Node
 {
     [Export] NodePath cardNodeHolderPath;
     [Export] PackedScene cardModelScene;
-    [Export] uint cards;
     [Export] Vector2 cardSize;
     [Export] NodePath deckNodePath;
+    [Export] NodePath controlGUIPath;
+    [Export] NodePath audioPlayerPath;
 
     //logic
     List<Card> cardArray = new List<Card>();
@@ -17,6 +18,29 @@ public class GameLogic : Node
     uint pointCounter = 0;
     Card lastSelectedCard = null;
     int cardCount = 0;
+    uint cards = 0;
+
+    public void CreateGame(uint cardAmount)
+    {
+        cards = cardAmount;
+
+        if (cardAmount < 2) cardAmount = 2;
+        else if (cardAmount % 2 != 0)
+        {
+            cardAmount++;
+            GD.Print("Changed card amount for: " + cardAmount);
+        }
+
+        AudioServer.SetBusSolo(2, false);
+
+        RestartGame();
+
+        GenerateCards(cardAmount);
+
+        Vector2 deckDimensions = DistributeCards(cardAmount);
+
+        ResizeDeck(deckDimensions);
+    }
 
     void RestartGame()
     {
@@ -29,68 +53,6 @@ public class GameLogic : Node
         }
 
         cardArray.Clear();
-    }
-
-    void GenerateCards(uint amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
-            Card tempCard = cardModelScene.Instance() as Card;
-            tempCard.SetSound((uint)Mathf.PosMod(i, amount / 2));
-            cardArray.Add(tempCard);
-        }
-        //randomize cards
-        RandomNumberGenerator random = new RandomNumberGenerator();
-        random.Randomize();
-        cardArray = cardArray.OrderBy(x => random.Randi()).ToList();
-    }
-
-    void CreateGame(uint cardAmount)
-    {
-        Spatial cardNodeHolder = GetNode(cardNodeHolderPath) as Spatial;
-
-        if (cardAmount < 2) cardAmount = 2;
-        else if (cardAmount % 2 != 0) cardAmount++;
-
-        GenerateCards(cardAmount);
-
-        //amount of cards in the X axis
-        int deckWidth = (int)Mathf.Sqrt(cardAmount) + 1;
-
-        //distribute cards on the deck
-        Vector2 cardPosition = Vector2.Zero;
-        int cardsY = 0;
-        for (int i = 0; i < cardArray.Count; i++)
-        {
-            Card tempCard = cardArray[i];
-
-            if (i % deckWidth == 0)
-            {
-                cardPosition.x = 0;
-                cardPosition.y += cardSize.y;
-                cardsY++;
-            }
-            cardPosition.x += cardSize.x;
-
-            //instance card
-            cardNodeHolder.AddChild(tempCard);
-
-            //setup card
-            tempCard.Translate(new Vector3(cardPosition.x, 0, cardPosition.y));
-        }
-
-        //adjust position of the cards and the deck
-        cardNodeHolder.Translation = new Vector3(-(deckWidth * cardSize.x + 2) / 2 - ((cardSize.x / 2) - 1),
-                                                0,  //wtf how does this work
-                                                -((cardsY * cardSize.y + 2) / 2) - ((cardSize.y / 2) - 1));
-
-        ResizeDeck(new Vector2(deckWidth, cardsY));
-    }
-
-    void ResizeDeck(Vector2 cardDistribution)
-    {
-        MeshInstance deckMesh = GetNode(deckNodePath) as MeshInstance;
-        deckMesh.Scale = new Vector3(cardDistribution.x * cardSize.x / 2, 1, (cardDistribution.y * cardSize.y / 2));
     }
 
     public void ProcessCard(Card currentCard)
@@ -108,10 +70,19 @@ public class GameLogic : Node
             if (currentCard.soundID == lastSelectedCard.soundID)
             {
                 pointCounter++;
+
+                //play special match sound
+                currentCard.PlayMatchSound();
+
                 currentCard.FleetCard();
                 lastSelectedCard.FleetCard();
                 ResetCardCounter();
                 GD.Print("Points: " + pointCounter);
+
+                if (pointCounter >= cards / 2)
+                {
+                    WinGame();
+                }
             }
             else
             {
@@ -143,9 +114,80 @@ public class GameLogic : Node
         cardCount = 0;
     }
 
-    void _on_HSlider_value_changed(float value)
+    Vector2 DistributeCards(uint cardAmount)
     {
-        RestartGame();
-        CreateGame((uint)value);
+        Spatial cardNodeHolder = GetNode(cardNodeHolderPath) as Spatial;
+
+        //amount of cards in the X axis
+        int deckWidth = (int)Mathf.Sqrt(cardAmount) + 1;
+
+        //distribute cards on the deck
+        Vector2 cardPosition = Vector2.Zero;
+        int cardsY = 0;
+        for (int i = 0; i < cardArray.Count; i++)
+        {
+            Card tempCard = cardArray[i];
+
+            if (i % deckWidth == 0)
+            {
+                cardPosition.x = 0;
+                cardPosition.y += cardSize.y;
+                cardsY++;
+            }
+            cardPosition.x += cardSize.x;
+
+            //instance card
+            cardNodeHolder.AddChild(tempCard);
+
+            //setup card
+            tempCard.Translate(new Vector3(cardPosition.x, 0, cardPosition.y));
+        }
+
+        //adjust position of the cards and the deck
+        cardNodeHolder.Translation = new Vector3(-(deckWidth * cardSize.x + 2) / 2 - ((cardSize.x / 2) - 1),
+                                                0,  //wtf how does this work
+                                                -((cardsY * cardSize.y + 2) / 2) - ((cardSize.y / 2) - 1));
+
+        return new Vector2(deckWidth, cardsY);
+    }
+
+    void GenerateCards(uint cardAmount)
+    {
+        for (int i = 0; i < cardAmount; i++)
+        {
+            Card tempCard = cardModelScene.Instance() as Card;
+            tempCard.SetSound((uint)Mathf.PosMod(i, cardAmount / 2));
+            cardArray.Add(tempCard);
+        }
+
+        //randomize cards
+        RandomNumberGenerator random = new RandomNumberGenerator();
+        random.Randomize();
+        cardArray = cardArray.OrderBy(x => random.Randi()).ToList();
+    }
+
+    void ResizeDeck(Vector2 cardDistribution)
+    {
+        MeshInstance deckMesh = GetNode(deckNodePath) as MeshInstance;
+        deckMesh.Scale = new Vector3(cardDistribution.x * cardSize.x / 2, 1, (cardDistribution.y * cardSize.y / 2));
+    }
+
+    void WinGame()
+    {
+        AudioStreamPlayer audioPlayer = GetNode(audioPlayerPath) as AudioStreamPlayer;
+        AudioStream winSoundStream = ResourceLoader.Load("Sounds/Win.wav") as AudioStream;
+
+        AudioServer.SetBusSolo(2, true);
+
+        audioPlayer.Stream = winSoundStream;
+        audioPlayer.Play();
+    }
+
+    void _onVictoryAudioPlayerFinish()
+    {
+        Control controlGUI = GetNode(controlGUIPath) as Control;
+        controlGUI.Show();
+
+        CreateGame(6);
     }
 }

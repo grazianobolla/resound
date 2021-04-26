@@ -1,8 +1,12 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Scripts/GameLogic.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/CardModel.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Scripts/RotationHelper.cs" type="Script" id=3]
+[ext_resource path="res://Resources/grabber_texture.png" type="Texture" id=4]
+[ext_resource path="res://Resources/OpenSans-Bold.ttf" type="DynamicFontData" id=5]
+[ext_resource path="res://Scripts/MenuController.cs" type="Script" id=6]
+[ext_resource path="res://Resources/Font.tres" type="DynamicFont" id=7]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 2, 1, 2 )
@@ -10,33 +14,30 @@ size = Vector3( 2, 1, 2 )
 [sub_resource type="SpatialMaterial" id=2]
 albedo_color = Color( 0.180392, 0.180392, 0.180392, 1 )
 
+[sub_resource type="StyleBoxLine" id=3]
+color = Color( 0.694118, 0.694118, 0.694118, 1 )
+thickness = 10
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0.694118, 0.694118, 0.694118, 1 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 32
+use_filter = true
+font_data = ExtResource( 5 )
+
 [node name="GameScene" type="Spatial"]
 
-[node name="AudioPlayer" type="AudioStreamPlayer" parent="."]
+[node name="MenuSoundPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Menu"
 
-[node name="GameLogic" type="Node" parent="."]
-script = ExtResource( 1 )
-cardNodeHolderPath = NodePath("../CardHolder")
-cardModelScene = ExtResource( 2 )
-cards = 2
-cardSize = Vector2( 3, 3.75 )
-deckNodePath = NodePath("../DeckModel")
+[node name="VictorySoundPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Menu"
+
+[node name="MusicPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Music"
 
 [node name="CardHolder" type="Spatial" parent="."]
-
-[node name="HSlider" type="HSlider" parent="."]
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-margin_left = -163.0
-margin_top = -16.0
-margin_right = 163.0
-min_value = 2.0
-value = 2.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="DeckModel" type="MeshInstance" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.729527, 0 )
@@ -47,7 +48,7 @@ material/0 = SubResource( 2 )
 script = ExtResource( 3 )
 
 [node name="Camera" type="Camera" parent="RotationHelper"]
-transform = Transform( 1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 11, 13 )
+transform = Transform( 1, 0, 0, 0, 0.642788, 0.766044, 0, -0.766044, 0.642788, 0, 16, 16 )
 current = true
 fov = 50.0
 size = 20.0
@@ -58,4 +59,143 @@ light_energy = 1.5
 shadow_enabled = true
 directional_shadow_mode = 0
 
-[connection signal="value_changed" from="HSlider" to="GameLogic" method="_on_HSlider_value_changed"]
+[node name="Control" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Buttons" type="Control" parent="Control"]
+margin_right = 288.0
+margin_bottom = 232.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="EasyButton" type="Button" parent="Control/Buttons"]
+anchor_top = -0.00684225
+anchor_bottom = -0.00684225
+margin_right = 167.0
+margin_bottom = 94.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+enabled_focus_mode = 0
+text = "EASY"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MedButton" type="Button" parent="Control/Buttons"]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -47.0
+margin_right = 167.0
+margin_bottom = 47.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+enabled_focus_mode = 0
+text = "MEDIUM"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HardButton" type="Button" parent="Control/Buttons"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -94.0
+margin_right = 194.0
+focus_mode = 0
+custom_fonts/font = ExtResource( 7 )
+custom_colors/font_color = Color( 0.94902, 0.94902, 0.94902, 1 )
+custom_colors/font_color_hover = Color( 1, 1, 1, 1 )
+enabled_focus_mode = 0
+text = "HARD"
+flat = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomText" type="RichTextLabel" parent="Control/Buttons"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -137.0
+margin_top = 119.0
+margin_right = 274.0
+margin_bottom = 207.0
+custom_fonts/normal_font = ExtResource( 7 )
+text = "CUSTOM:"
+scroll_active = false
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomSlider" type="HSlider" parent="Control/Buttons"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -133.0
+margin_top = 210.0
+margin_right = 144.0
+margin_bottom = 246.0
+custom_icons/grabber_disabled = ExtResource( 4 )
+custom_icons/grabber_highlight = ExtResource( 4 )
+custom_icons/grabber = ExtResource( 4 )
+custom_styles/slider = SubResource( 3 )
+custom_styles/grabber_area_highlight = SubResource( 4 )
+min_value = 2.0
+max_value = 56.0
+step = 2.0
+value = 2.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CustomLabel" type="Label" parent="Control/Buttons/CustomSlider"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -144.0
+margin_top = 16.0
+margin_right = 144.0
+margin_bottom = 44.0
+custom_fonts/font = SubResource( 5 )
+text = "2"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MenuController" type="Node" parent="."]
+script = ExtResource( 6 )
+customGameLabelPath = NodePath("../Control/Buttons/CustomSlider/CustomLabel")
+ControlPath = NodePath("../Control")
+menuSoundPlayerPath = NodePath("../MenuSoundPlayer")
+
+[node name="GameLogic" type="Node" parent="."]
+script = ExtResource( 1 )
+cardNodeHolderPath = NodePath("../CardHolder")
+cardModelScene = ExtResource( 2 )
+cardSize = Vector2( 3, 3.75 )
+deckNodePath = NodePath("../DeckModel")
+controlGUIPath = NodePath("../Control")
+audioPlayerPath = NodePath("../VictorySoundPlayer")
+
+[connection signal="finished" from="VictorySoundPlayer" to="GameLogic" method="_onVictoryAudioPlayerFinish"]
+[connection signal="mouse_entered" from="Control/Buttons/EasyButton" to="MenuController" method="_onEasyHover"]
+[connection signal="pressed" from="Control/Buttons/EasyButton" to="MenuController" method="_onButtonPressed"]
+[connection signal="mouse_entered" from="Control/Buttons/MedButton" to="MenuController" method="_onMedHover"]
+[connection signal="pressed" from="Control/Buttons/MedButton" to="MenuController" method="_onButtonPressed"]
+[connection signal="mouse_entered" from="Control/Buttons/HardButton" to="MenuController" method="_onHardHover"]
+[connection signal="pressed" from="Control/Buttons/HardButton" to="MenuController" method="_onButtonPressed"]
+[connection signal="value_changed" from="Control/Buttons/CustomSlider" to="MenuController" method="_onSliderChange"]

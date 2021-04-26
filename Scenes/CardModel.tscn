@@ -107,7 +107,6 @@ tracks/1/keys = {
 script = ExtResource( 1 )
 
 [node name="CardBody" type="Spatial" parent="."]
-transform = Transform( 1, 8.74228e-08, 8.74228e-08, 8.74228e-08, -1, 0, 8.74228e-08, 7.64274e-15, -1, 0, 0.97879, 0 )
 
 [node name="CardUpper" type="MeshInstance" parent="CardBody"]
 transform = Transform( 1, -6.6815e-22, 0, -6.6815e-22, 1, 0, 0, 0, 1, 0, 0, 0 )
@@ -126,7 +125,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0500413, 0 )
 shape = SubResource( 5 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-autoplay = "Hide"
 anims/Fleet = SubResource( 6 )
 anims/Hide = SubResource( 7 )
 anims/Hover = SubResource( 8 )
