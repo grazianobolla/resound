@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 public class GameLogic : Node
@@ -30,12 +31,28 @@ public class GameLogic : Node
         cardArray.Clear();
     }
 
-    void CreateDeck(uint cardAmount)
+    void GenerateCards(uint amount)
+    {
+        for (int i = 0; i < amount; i++)
+        {
+            Card tempCard = cardModelScene.Instance() as Card;
+            tempCard.SetSound((uint)Mathf.PosMod(i, amount / 2));
+            cardArray.Add(tempCard);
+        }
+        //randomize cards
+        RandomNumberGenerator random = new RandomNumberGenerator();
+        random.Randomize();
+        cardArray = cardArray.OrderBy(x => random.Randi()).ToList();
+    }
+
+    void CreateGame(uint cardAmount)
     {
         Spatial cardNodeHolder = GetNode(cardNodeHolderPath) as Spatial;
 
         if (cardAmount < 2) cardAmount = 2;
         else if (cardAmount % 2 != 0) cardAmount++;
+
+        GenerateCards(cardAmount);
 
         //amount of cards in the X axis
         int deckWidth = (int)Mathf.Sqrt(cardAmount) + 1;
@@ -43,8 +60,10 @@ public class GameLogic : Node
         //distribute cards on the deck
         Vector2 cardPosition = Vector2.Zero;
         int cardsY = 0;
-        for (int i = 0; i < cardAmount; i++)
+        for (int i = 0; i < cardArray.Count; i++)
         {
+            Card tempCard = cardArray[i];
+
             if (i % deckWidth == 0)
             {
                 cardPosition.x = 0;
@@ -54,20 +73,15 @@ public class GameLogic : Node
             cardPosition.x += cardSize.x;
 
             //instance card
-            Card tempCard = cardModelScene.Instance() as Card;
             cardNodeHolder.AddChild(tempCard);
 
             //setup card
             tempCard.Translate(new Vector3(cardPosition.x, 0, cardPosition.y));
-            tempCard.SetSound((uint)Mathf.PosMod(i, cardAmount / 2));
-
-            //add card to array
-            cardArray.Add(tempCard as Card);
         }
 
-        //wtf how does this work
+        //adjust position of the cards and the deck
         cardNodeHolder.Translation = new Vector3(-(deckWidth * cardSize.x + 2) / 2 - ((cardSize.x / 2) - 1),
-                                                0,
+                                                0,  //wtf how does this work
                                                 -((cardsY * cardSize.y + 2) / 2) - ((cardSize.y / 2) - 1));
 
         ResizeDeck(new Vector2(deckWidth, cardsY));
@@ -96,7 +110,7 @@ public class GameLogic : Node
                 pointCounter++;
                 currentCard.FleetCard();
                 lastSelectedCard.FleetCard();
-
+                ResetCardCounter();
                 GD.Print("Points: " + pointCounter);
             }
             else
@@ -132,6 +146,6 @@ public class GameLogic : Node
     void _on_HSlider_value_changed(float value)
     {
         RestartGame();
-        CreateDeck((uint)value);
+        CreateGame((uint)value);
     }
 }

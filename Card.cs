@@ -73,14 +73,16 @@ public class Card : Spatial
         switch (animation)
         {
             case "Reveal":
+                animationPlayer.Play("Hover");
+
                 audioPlayer.Stream = cardSound;
                 audioPlayer.Play();
+
                 gameLogic.ProcessCard(this);
                 break;
             case "Fleet":
                 isFleeting = false;
                 Visible = false;
-                gameLogic.ResetCardCounter();
                 break;
             case "Hide":
                 gameLogic.ResetCardCounter();
@@ -94,6 +96,7 @@ public class Card : Spatial
     {
         if (evnt is InputEventMouseButton input_mouse_button && input_mouse_button.Pressed == true && input_mouse_button.ButtonIndex == (int)ButtonList.Left)
         {
+            GD.Print("CardID: " + soundID);
             if (isSelected == false)
             {
                 if (gameLogic.CheckCard())
