@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/CardReveal13.wav-9d5eef1768f39a5dd5672b31209e4ca2.sample"
+
+[deps]
+
+source_file="res://Sounds/Cards/CardReveal13.wav"
+dest_files=[ "res://.import/CardReveal13.wav-9d5eef1768f39a5dd5672b31209e4ca2.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
