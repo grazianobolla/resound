@@ -10,26 +10,24 @@ public class GameLogic : Node
     [Export] Vector2 cardSize;
     [Export] NodePath deckNodePath;
     [Export] NodePath controlGUIPath;
-    [Export] NodePath audioPlayerPath;
 
-    AudioStreamPlayer musicPlayer;
     List<Card> cardArray = new List<Card>();
     Card lastSelectedCard = null;
-    int cardCount = 0;
-    uint pointCounter = 0, cards = 0;
 
-    AudioStreamPlayer audioPlayer;
+    int cardCount = 0;
+    uint pointCounter = 0, currentCardAmount = 0;
+
+    AudioManager audioManager;
 
     public override void _Ready()
     {
-        audioPlayer = GetNode(audioPlayerPath) as AudioStreamPlayer;
-        musicPlayer = GetNode("/root/GameScene/MusicPlayer") as AudioStreamPlayer;
+        audioManager = GetNode("/root/GameScene/AudioManager") as AudioManager;
         CreateGame(6);
     }
 
     public void CreateGame(uint cardAmount)
     {
-        cards = cardAmount;
+        currentCardAmount = cardAmount;
 
         if (cardAmount < 2) cardAmount = 2;
         else if (cardAmount % 2 != 0)
@@ -83,7 +81,7 @@ public class GameLogic : Node
                 lastSelectedCard.FleetCard();
                 ResetCardCounter();
 
-                if (pointCounter >= cards / 2)
+                if (pointCounter >= currentCardAmount / 2)
                 {
                     WinGame();
                 }
@@ -177,7 +175,7 @@ public class GameLogic : Node
         float deckY = cardDistribution.y * cardSize.y / 2;
         deckMesh.Scale = new Vector3(deckX, 1, deckY);
 
-        //place the palm trees randomly
+        //place the palm trees randomly, there are only 3 so no big deal
         RandomNumberGenerator ranGen = new RandomNumberGenerator();
 
         Spatial[] palms = new Spatial[3];
@@ -208,12 +206,7 @@ public class GameLogic : Node
 
     void WinGame()
     {
-        AudioStream winSoundStream = ResourceLoader.Load("Sounds/Win.wav") as AudioStream;
-
-        AudioServer.SetBusSolo(2, true); //mutes all buses except for this one so you can enjoy the win sound effect
-
-        audioPlayer.Stream = winSoundStream;
-        audioPlayer.Play();
+        audioManager.PlayVictorySoundEffect();
     }
 
     public void ReturnToMenu()
@@ -221,9 +214,7 @@ public class GameLogic : Node
         Control controlGUI = GetNode(controlGUIPath) as Control;
         controlGUI.Show();
 
-        AudioServer.SetBusMute(1, false);
-
-        musicPlayer.VolumeDb = -50; //lower music volume
+        audioManager.RestartMusic();
 
         CreateGame(6); //set easy game as preview default
     }

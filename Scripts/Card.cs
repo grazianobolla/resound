@@ -77,17 +77,13 @@ public class Card : Spatial
 
     void _onAnimationFinished(string animation)
     {
-        //when the reveal animation finishes, we call the Check() function, this is only for aesthetic
         switch (animation)
         {
             case "Reveal":
                 animationPlayer.Play("Hover");
 
                 if (audioPlayer.Stream != matchCardSound)
-                {
-                    audioPlayer.Stream = cardSound;
                     audioPlayer.Play();
-                }
 
                 gameLogic.ProcessCard(this);
                 break;

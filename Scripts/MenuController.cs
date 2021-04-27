@@ -4,20 +4,16 @@ using System;
 public class MenuController : Node
 {
     [Export] NodePath ControlPath;
-    [Export] NodePath menuSoundPlayerPath;
-
-    AudioStreamPlayer menuStreamPlayer;
     Control menuControl;
 
+    AudioManager audioManager;
     GameLogic gameLogic;
 
     public override void _Ready()
     {
+        audioManager = GetNode("/root/GameScene/AudioManager") as AudioManager;
         gameLogic = GetNode("/root/GameScene/GameLogic") as GameLogic;
         menuControl = GetNode(ControlPath) as Control;
-
-        menuStreamPlayer = GetNode(menuSoundPlayerPath) as AudioStreamPlayer;
-        menuStreamPlayer.Stream = ResourceLoader.Load($"Sounds/Menu/StartGame1.wav") as AudioStream;
     }
 
     void _onSliderChange(float value)
@@ -45,8 +41,8 @@ public class MenuController : Node
 
     void _onButtonPressed()
     {
-        AudioServer.SetBusMute(1, true);
-        menuStreamPlayer.Play();
+        audioManager.StopMusic();
+        audioManager.PlayMenuButtonSound();
         menuControl.Hide();
     }
 
@@ -60,14 +56,15 @@ public class MenuController : Node
                 {
                     if (OS.WindowFullscreen == true) OS.WindowFullscreen = false;
                     else OS.WindowFullscreen = true;
+                    return;
                 }
-                else if (key_event.Scancode == (int)KeyList.Escape)
+
+                if (key_event.Scancode == (int)KeyList.Escape)
                 {
                     gameLogic.ReturnToMenu();
+                    return;
                 }
             }
-
-            return;
         }
     }
 }
