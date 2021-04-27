@@ -15,7 +15,9 @@ public class MenuController : Node
     {
         gameLogic = GetNode("/root/GameScene/GameLogic") as GameLogic;
         menuControl = GetNode(ControlPath) as Control;
+
         menuStreamPlayer = GetNode(menuSoundPlayerPath) as AudioStreamPlayer;
+        menuStreamPlayer.Stream = ResourceLoader.Load($"Sounds/Menu/StartGame1.wav") as AudioStream;
     }
 
     void _onSliderChange(float value)
@@ -43,14 +45,8 @@ public class MenuController : Node
 
     void _onButtonPressed()
     {
-        Random random = new Random();
-        int id = (random.Next() % 6) + 1;
-
         AudioServer.SetBusMute(1, true);
-
-        menuStreamPlayer.Stream = ResourceLoader.Load($"Sounds/Menu/StartGame{id}.wav") as AudioStream;
         menuStreamPlayer.Play();
-
         menuControl.Hide();
     }
 

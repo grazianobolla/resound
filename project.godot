@@ -17,10 +17,11 @@ boot_splash/fullsize=false
 boot_splash/use_filter=false
 boot_splash/bg_color=Color( 0.729412, 0.776471, 0.811765, 1 )
 config/icon="res://icon.png"
+config/windows_native_icon="res://Resources/app_icon.ico"
 
 [audio]
 
-driver="ALSA"
+driver="WASAPI"
 
 [physics]
 

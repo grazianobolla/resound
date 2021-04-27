@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://Scripts/GameLogic.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/CardModel.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://Resources/Font.tres" type="DynamicFont" id=7]
 [ext_resource path="res://Sounds/MenuMusic.wav" type="AudioStream" id=8]
 [ext_resource path="res://Scripts/MusicPlayer.cs" type="Script" id=9]
+[ext_resource path="res://Scenes/Palm.tscn" type="PackedScene" id=10]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 2, 1, 2 )
@@ -40,9 +41,9 @@ bus = "Music"
 script = ExtResource( 9 )
 
 [node name="MenuSoundPlayer" type="AudioStreamPlayer" parent="."]
-bus = "Menu"
 
 [node name="VictorySoundPlayer" type="AudioStreamPlayer" parent="."]
+bus = "Victory"
 
 [node name="CardHolder" type="Spatial" parent="."]
 
@@ -201,6 +202,15 @@ cardSize = Vector2( 3, 3.75 )
 deckNodePath = NodePath("../DeckModel")
 controlGUIPath = NodePath("../Control")
 audioPlayerPath = NodePath("../VictorySoundPlayer")
+
+[node name="Palm" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.0702266, 0, -0.997531, 0, 1, 0, 0.997531, 0, 0.0702266, 0, 0, 0 )
+
+[node name="Palm2" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.619437, 0, -0.785047, 0, 1, 0, 0.785047, 0, 0.619437, 0, 0, 0 )
+
+[node name="Palm3" parent="." instance=ExtResource( 10 )]
+transform = Transform( 0.11953, 0, -0.992831, 0, 1, 0, 0.992831, 0, 0.11953, 0, 0, 0 )
 
 [connection signal="finished" from="VictorySoundPlayer" to="GameLogic" method="_onVictoryAudioPlayerFinish"]
 [connection signal="mouse_entered" from="Control/Buttons/EasyButton" to="MenuController" method="_onEasyHover"]

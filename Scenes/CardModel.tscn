@@ -131,7 +131,6 @@ anims/Hover = SubResource( 8 )
 anims/Reveal = SubResource( 9 )
 
 [node name="Audio" type="AudioStreamPlayer" parent="."]
-bus = "Cards"
 
 [connection signal="input_event" from="Area" to="." method="_onAreaInputEvent"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_onAnimationFinished"]

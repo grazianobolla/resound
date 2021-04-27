@@ -11,8 +11,8 @@ public class GameLogic : Node
     [Export] NodePath deckNodePath;
     [Export] NodePath controlGUIPath;
     [Export] NodePath audioPlayerPath;
-    AudioStreamPlayer musicPlayer;
 
+    AudioStreamPlayer musicPlayer;
     List<Card> cardArray = new List<Card>();
     Card lastSelectedCard = null;
     int cardCount = 0;
@@ -35,7 +35,6 @@ public class GameLogic : Node
         else if (cardAmount % 2 != 0)
         {
             cardAmount++;
-            GD.Print("Changed card amount for: " + cardAmount);
         }
 
         AudioServer.SetBusSolo(2, false); //restores buses
@@ -83,7 +82,6 @@ public class GameLogic : Node
                 currentCard.FleetCard();
                 lastSelectedCard.FleetCard();
                 ResetCardCounter();
-                GD.Print("Points: " + pointCounter);
 
                 if (pointCounter >= cards / 2)
                 {
@@ -175,7 +173,37 @@ public class GameLogic : Node
     void ResizeDeck(Vector2 cardDistribution)
     {
         MeshInstance deckMesh = GetNode(deckNodePath) as MeshInstance;
-        deckMesh.Scale = new Vector3(cardDistribution.x * cardSize.x / 2, 1, (cardDistribution.y * cardSize.y / 2));
+        float deckX = cardDistribution.x * cardSize.x / 2;
+        float deckY = cardDistribution.y * cardSize.y / 2;
+        deckMesh.Scale = new Vector3(deckX, 1, deckY);
+
+        //place the palm trees randomly
+        RandomNumberGenerator ranGen = new RandomNumberGenerator();
+
+        Spatial[] palms = new Spatial[3];
+        palms[0] = GetNode("/root/GameScene/Palm") as Spatial;
+        palms[1] = GetNode("/root/GameScene/Palm2") as Spatial;
+        palms[2] = GetNode("/root/GameScene/Palm3") as Spatial;
+
+        foreach (Spatial p in palms)
+        {
+            ranGen.Randomize();
+            uint side = (uint)ranGen.RandiRange(0, 3);
+
+            float deckXMargin = deckX + 5;
+            float deckYMargin = deckY + 5;
+
+            if (side == 0 || side == 1)
+            {
+                p.Translation = new Vector3((side == 0) ? deckXMargin : -deckXMargin, 1,
+                                            ranGen.RandfRange(-deckYMargin, deckYMargin));
+            }
+            else if (side == 2 || side == 3)
+            {
+                p.Translation = new Vector3(ranGen.RandfRange(-deckXMargin, deckXMargin), 1,
+                                            (side == 2) ? deckYMargin : -deckYMargin);
+            }
+        }
     }
 
     void WinGame()

@@ -67,8 +67,6 @@ public class Card : Spatial
         RandomNumberGenerator rand = new RandomNumberGenerator();
         rand.Randomize();
         fleetAngle = rand.RandfRange(0, Mathf.Pi * 2);
-
-        GD.Print("Fleeting with angle: " + fleetAngle);
     }
 
     public void PlayMatchSound()
@@ -109,7 +107,6 @@ public class Card : Spatial
     {
         if (evnt is InputEventMouseButton input_mouse_button && input_mouse_button.Pressed == true && input_mouse_button.ButtonIndex == (int)ButtonList.Left)
         {
-            GD.Print("CardID: " + soundID);
             if (isSelected == false && gameLogic.CheckCard())
             {
                 RevealCard();
