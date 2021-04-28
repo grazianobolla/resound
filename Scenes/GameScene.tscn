@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://Scripts/GameLogic.cs" type="Script" id=1]
 [ext_resource path="res://Scenes/CardModel.tscn" type="PackedScene" id=2]
@@ -12,6 +12,7 @@
 [ext_resource path="res://Scenes/Palm.tscn" type="PackedScene" id=10]
 [ext_resource path="res://Sounds/Win.wav" type="AudioStream" id=11]
 [ext_resource path="res://Scripts/AudioManager.cs" type="Script" id=12]
+[ext_resource path="res://Sounds/Menu/StartGame5.wav" type="AudioStream" id=13]
 
 [sub_resource type="CubeMesh" id=1]
 size = Vector3( 2, 1, 2 )
@@ -58,6 +59,7 @@ bus = "Music"
 script = ExtResource( 9 )
 
 [node name="MenuPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
 
 [node name="VictoryPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 11 )

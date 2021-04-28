@@ -19,10 +19,6 @@ boot_splash/bg_color=Color( 0.729412, 0.776471, 0.811765, 1 )
 config/icon="res://icon.png"
 config/windows_native_icon="res://Resources/app_icon.ico"
 
-[audio]
-
-driver="WASAPI"
-
 [physics]
 
 common/enable_pause_aware_picking=true
